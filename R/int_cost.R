@@ -15,35 +15,37 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#' @title Use a formula to define \code{vlrr} model
+#' @title Cost function
 #'
-#' @description S3 formula method for \code{vlrr} class.
+#' @description \code{cost()} .
 #'
-#' @details Give the details of the \code{code} here.
+#' @details Internal function supplied to \code{optim} which calculates cost function
 #'
-#' @param formula Formula specifying model.
-#' @param data List specifying location or vectors called in formula.
-#' @param ... Further arguments to or from other methods.
-#' @return Object of class formula
+#' @param X Design matrix X.
+#' @param y Vector of observations.
+#' @param theta Vector of starting values for coefficients of length \code{ncol(X)+1}.
+#' @param lambda Regularisation parameter.
 #'
-#' @examples
+#' @return Returns the cost of the current parameters theta.
 #'
-#' library(vlrr)
-#' data(mpg, package="ggplot2")
-#' model <- vlrr(mpg ~ disp, data = mtcars)
-#' model
-#'
-#' @export
+cost <- function(X, y, theta, lambda) {
 
-vlrr.formula <- function(formula, data = list(), ...) {
+  m <- length(y)
 
-  mf <- model.frame(formula = formula, data = data)
-  x <- model.matrix(attr(mf, "terms"), data = mf)
-  y <- model.response(mf)
+  theta1 <- theta
 
-  est <- vlrr.default(x, y, ...)
-  est$call <- match.call()
-  est$formula <- formula
-  est
+  # Ensure that regularisation is not operating on \theta_0
+
+  theta1[1] <- 0
+
+  error <- tcrossprod(theta,X)
+  error <- as.vector(error) - y
+  error1 <- crossprod(error,error)
+
+  reg <- (lambda/(2*m)) * crossprod(theta1, theta1)
+
+  cost <- (1/(2 * m)) * error1 + reg
+
+  return(cost)
 
 }

@@ -1,20 +1,35 @@
-#' @title Title
+#    vlrr: Vectorised linear regression with regularisation
+#    A package for the R statistical environment
+#    Copyright (C) 2015  Matthew Upson <ivyleavedtoadflax@gmail.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#' @title Gradient function
 #'
-#' @description \code{this_function} What does it do?.
+#' @description \code{gradient()} .
 #'
-#' @details Give the details of the \code{code} here.
+#' @details Internal function supplied to \code{optim} which calculates gradient.
 #'
-#' @param parameter1 Does something...
-#' @param parameter2 Also does something.
-#' @return What do you get back?
+#' @param X Design matrix X.
+#' @param y Vector of observations.
+#' @param theta Vector of starting values for coefficients of length \code{ncol(X)+1}.
+#' @param lambda Regularisation parameter.
 #'
-#' @examples
+#' @return Returns the gradient of the current parameters theta.
 #'
-#' library(dplyr)
-#'
-#' @export
 
-gR <- function(X, y, theta, lambda) {
+gradient <- function(X, y, theta, lambda) {
 
   theta1 <- theta
   theta1[1] <- 0

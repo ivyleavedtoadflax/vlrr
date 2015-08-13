@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.roxy_header*$
+roxy_header.sh
+roxy_header
+GPL-3_header
+.travis.yml
