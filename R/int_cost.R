@@ -15,44 +15,53 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#' @title Vectorised linear regression with regularisation
+#' @title Cost function
 #'
-#' @description \code{vlrr} Main function behind the vlrr package.
+#' @description \code{cost()} .
 #'
-#' @details Essential a wrapper function for the \code{optim} function..
+#' @details Internal function supplied to \code{optim} which calculates cost function
 #'
-#' @param X Design matrix x.
+#' @param X Design matrix X.
 #' @param y Vector of observations.
+#' @param theta Vector of starting values for coefficients of length \code{ncol(X)+1}.
 #' @param lambda Regularisation parameter.
-#' @return Returns a list giving the original model call, the final gradient
-#'   given by the last iteration of the \code{gradient} function call, and the
-#'   final coefficients.
+#'
+#' @return Returns the cost of the current parameters theta.
 #'
 #' @examples
 #'
-#' library(vlrr)
-#' model <- vlrr(mpg ~ disp, data = mtcars)
-#' model
+#' library(dplyr)
+#' theta <- rep(1,2)
+#' lambda <- 0
+#' x <- mpg$displ
+#' y <- mpg$hwy
 #'
-#' @export
+#' optim_out <- optim(
+#'   par = theta,
+#' fn = function(t) J(cbind(1, x), y, t, lambda),
+#' gr = function(t) gR(cbind(1, x), y, t, lambda),
+#' method = "BFGS"
+#' )
+#'
+#'
+cost <- function(X, y, theta, lambda) {
 
-vlrr <- function(x, y, lambda, ...) UseMethod("vlrr")
+  m <- length(y)
 
-vlrr.default <- function(x, y, lambda = 0, ...) {
+  theta1 <- theta
 
-  # Could put in some more verbose checks of the input here.
+  # Ensure that regularisation is not operating on \theta_0
 
-  x <- as.matrix(x)
-  y <- as.numeric(y)
-  lambda <- as.numeric(lambda)
+  theta1[1] <- 0
 
-  est <- vlrr_est(x, y, lambda)
+  error <- tcrossprod(theta,X)
+  error <- as.vector(error) - y
+  error1 <- crossprod(error,error)
 
-  est$lambda = lambda
-  est$fitted.values <- as.vector(x %*% est$coefficients)
-  est$residuals <- y - est$fitted.values
-  est$call <- match.call()
+  reg <- (lambda/(2*m)) * crossprod(theta1, theta1)
 
-  class(est) <- "vlrr"
-  est
+  cost <- (1/(2 * m)) * error1 + reg
+
+  return(cost)
+
 }
