@@ -38,8 +38,8 @@
 #'
 #' optim_out <- optim(
 #'   par = theta,
-#' fn = function(t) J(cbind(1, x), y, t, lambda),
-#' gr = function(t) gR(cbind(1, x), y, t, lambda),
+#' fn = function(t) cost(cbind(1, x), y, t, lambda),
+#' gr = function(t) gradient(cbind(1, x), y, t, lambda),
 #' method = "BFGS"
 #' )
 #'
