@@ -58,6 +58,9 @@ summary.vlrr <- function(object, ...) {
     t.value = tval,
     p.value = 2 * pt( - abs(tval), df = object$df)
   )
+
+  colnames(TAB) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
+
   res <- list(
     convergence = object$convergence,
     message = object$message,

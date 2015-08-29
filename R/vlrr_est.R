@@ -34,11 +34,10 @@
 #' library(dplyr)
 #' )
 #'
-#' @importFrom MASS ginv
 #' @export
 
 
-vlrr_est <- function(x, y, lambda)
+vlrr_est <- function(x, y, lambda, ...)
 
 {
 
@@ -70,7 +69,7 @@ vlrr_est <- function(x, y, lambda)
   # chol2inv(qx$qr). It'll do for now... Note that this requires MASS::ginv().
   # Mildly faster to use crossprod than %*%
 
-  vcov <- sigma2 * MASS::ginv(crossprod(x,x))
+  vcov <- sigma2 * solve(crossprod(x,x))
 
   list(
     coefficients = optim_out$par,

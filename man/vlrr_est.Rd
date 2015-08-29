@@ -4,7 +4,7 @@
 \alias{vlrr_est}
 \title{Vectorised linear regression with regularisation}
 \usage{
-vlrr_est(x, y, lambda)
+vlrr_est(x, y, lambda, ...)
 }
 \arguments{
 \item{y}{Vector of observations.}
